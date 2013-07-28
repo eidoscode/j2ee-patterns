@@ -66,7 +66,7 @@
 		</snapshotRepository>
 		<site>
 			<id>eidoscode-sshrepository</id>
-			<url>scp://ssh.eidoscode.com/www/libs.eidoscode.com/generics-utils</url>
+			<url>scp://ssh.eidoscode.com/www/libs.eidoscode.com/j2ee-patterns</url>
 		</site>
 	</distributionManagement>
 	
