@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 
  * @author eantonini
  * @since 1.0
- * @version 1.0
+ * @version 1.1
  * @param <Id>
  *            The type of the Id of the model. If it`s a relational database, it
  *            probably will be something such as a {@link Long} or
@@ -21,7 +21,7 @@ public interface Model<Id extends Serializable> extends Serializable {
 	 * @return Id value
 	 * @since 1.0
 	 */
-	public abstract Id getId();
+	Id getId();
 
 	/**
 	 * Sets the Id value.
@@ -30,6 +30,23 @@ public interface Model<Id extends Serializable> extends Serializable {
 	 *            Id value
 	 * @since 1.0
 	 */
-	public abstract void setId(Id id);
+	void setId(Id id);
+
+	/**
+	 * Brings the Version of the bean.
+	 * 
+	 * @since 1.1
+	 * @return Version of the bean.
+	 */
+	int getVersion();
+
+	/**
+	 * Sets the version of the bean.
+	 * 
+	 * @since 1.1
+	 * @param version
+	 *            Version of the bean.
+	 */
+	void setVersion(final int version);
 
 }
