@@ -1,6 +1,7 @@
 package com.eidoscode.framework.persistence.bo.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -18,7 +19,7 @@ import com.eidoscode.framework.persistence.model.Model;
  * bean.
  * 
  * @author eantonini
- * @version 1.0
+ * @version 1.3
  * @since 1.0
  * 
  * @param <Key>
@@ -180,6 +181,40 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
   }
 
   /**
+   * Saves a list of the desired entities. It means it will persist a new entity
+   * or merge an existent entity.
+   * 
+   * @since 1.3
+   * @param beans
+   *          desired entities.
+   * @return entities stored.
+   */
+  @Override
+  public <E extends Collection<Bean>> E save(E beans) {
+    if (beans == null) {
+      throw new NullPointerException("The bean parameter is mandatory.");
+    }
+    return save(beans, false);
+  }
+
+  /**
+   * Saves a list of the desired entities. It means it will persist a new entity
+   * or merge an existent entity.
+   * 
+   * @since 1.3
+   * @param beans
+   *          desired entities.
+   * @param flush
+   *          If <code>true</code> the method {@link EntityManager#flush()} will
+   *          be called.
+   * @return entities stored.
+   */
+  @Override
+  public <E extends Collection<Bean>> E save(E beans, boolean flush) {
+    return getDAO().save(beans, flush);
+  }
+
+  /**
    * Removes a desired entity.
    * 
    * @since 1.0
@@ -221,8 +256,8 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
    *          Entity key.
    */
   @Override
-  public void removeById(Key key) {
-    removeById(key, false);
+  public boolean removeById(Key key) {
+    return removeById(key, false);
   }
 
   /**
@@ -236,8 +271,13 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
    *          be called.
    */
   @Override
-  public void removeById(Key key, boolean flush) {
+  public boolean removeById(Key key, boolean flush) {
+    boolean returnValue = false;
     Bean entity = findByKey(key);
-    remove(entity, flush);
+    if (entity != null) {
+      remove(entity, flush);
+      returnValue = true;
+    }
+    return returnValue;
   }
 }

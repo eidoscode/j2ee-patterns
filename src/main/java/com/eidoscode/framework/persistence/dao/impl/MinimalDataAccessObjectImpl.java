@@ -14,33 +14,33 @@ import org.apache.log4j.Logger;
  */
 public abstract class MinimalDataAccessObjectImpl {
 
-	protected final Logger logger;
+  protected final Logger logger;
 
-	/**
-	 * Main constructor of the Data Access Object.
-	 * 
-	 * @since 1.0
-	 */
-	public MinimalDataAccessObjectImpl() {
-		logger = Logger.getLogger(getClass());
-	}
+  /**
+   * Main constructor of the Data Access Object.
+   * 
+   * @since 1.0
+   */
+  public MinimalDataAccessObjectImpl() {
+    logger = Logger.getLogger(getClass());
+  }
 
-	/**
-	 * Brings the {@link EntityManager}.
-	 * 
-	 * @since 1.0
-	 * @return {@link EntityManager}.
-	 */
-	public abstract EntityManager getEntityManager();
+  /**
+   * Brings the {@link EntityManager}.
+   * 
+   * @since 1.0
+   * @return {@link EntityManager}.
+   */
+  public abstract EntityManager getEntityManager();
 
-	/**
-	 * Brings the {@link Logger}.
-	 * 
-	 * @since 1.0
-	 * @return {@link Logger}.
-	 */
-	public Logger getLogger() {
-		return logger;
-	}
+  /**
+   * Brings the {@link Logger}.
+   * 
+   * @since 1.0
+   * @return {@link Logger}.
+   */
+  public Logger getLogger() {
+    return logger;
+  }
 
 }
