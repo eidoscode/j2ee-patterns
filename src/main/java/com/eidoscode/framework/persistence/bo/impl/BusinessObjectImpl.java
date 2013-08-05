@@ -281,4 +281,37 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
     }
     return returnValue;
   }
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public void removeById(Collection<Key> keys) {
+    removeById(keys, false);
+  }
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public void removeById(Collection<Key> keys, boolean flush) {
+    this.getDAO().removeById(keys, flush);
+  }
+
 }
