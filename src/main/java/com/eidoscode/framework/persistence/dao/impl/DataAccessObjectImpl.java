@@ -43,7 +43,7 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * Default amount that will be used on the batch save. This will be used on
    * the methods {@link #getAmountSaveBatchRecords()}.
    */
-  public static final int DEFAULT_AMOUNT_SAVE_BATCH_RECORDS = 20;
+  public static final int DEFAULT_AMOUNT_SAVE_BATCH_RECORDS = 50;
 
   /**
    * Main constructor. It collects the Key of the entity, the entity type and
@@ -143,21 +143,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
     return bean;
   }
 
-  // /**
-  // * Saves a list of the desired entities. It means it will persist a new
-  // entity
-  // * or merge an existent entity.
-  // *
-  // * @since 1.3
-  // * @param beans
-  // * desired entities.
-  // * @return entities stored.
-  // */
-  // @Override
-  // public <E extends Collection<Bean>> E save(E beans) {
-  // return save(beans, false);
-  // }
-
   /**
    * Saves a list of the desired entities. It means it will persist a new entity
    * or merge an existent entity.
@@ -199,18 +184,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
     return DEFAULT_AMOUNT_SAVE_BATCH_RECORDS;
   }
 
-  // /**
-  // * Removes a desired entity.
-  // *
-  // * @since 1.0
-  // * @param bean
-  // * Desired entity.
-  // */
-  // @Override
-  // public void remove(Bean bean) {
-  // remove(bean, false);
-  // }
-
   /**
    * Removes a desired entity.
    * 
@@ -228,18 +201,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
     getEntityManager().remove(bean);
     flushEntityManager(flush);
   }
-
-  // /**
-  // * Remove an entity by it's Id.
-  // *
-  // * @since 1.3
-  // * @param key
-  // * The Key of the entity that want to be removed.
-  // */
-  // @Override
-  // public void removeById(Key key) {
-  // removeById(key, false);
-  // }
 
   /**
    * Remove an entity by it's Id.
@@ -268,22 +229,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
 
     flushEntityManager(flush);
   }
-
-  // /**
-  // * Removes all entities by an ID.
-  // *
-  // * @since 1.3
-  // * @param keys
-  // * Desired keys to be removed.
-  // * @param flush
-  // * If <code>true</code> the method
-  // * {@link #flushEntityManager(boolean)} will be called.
-  // * @return entities stored.
-  // */
-  // @Override
-  // public void removeById(Collection<Key> keys) {
-  // removeById(keys, false);
-  // }
 
   /**
    * Removes all entities by an ID.
