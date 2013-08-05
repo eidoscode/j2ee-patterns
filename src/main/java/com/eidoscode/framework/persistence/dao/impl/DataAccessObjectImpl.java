@@ -6,10 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -25,7 +23,7 @@ import com.eidoscode.generics.utils.GenericsUtils;
  * 
  * @author eantonini
  * @since 1.0
- * @version 1.1
+ * @version 1.2
  * @param <Key>
  *          The type of the Id of the model. If it's a relational database, it
  *          probably will be something such as a {@link Long} or {@link Integer}
@@ -45,7 +43,7 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * Default amount that will be used on the batch save. This will be used on
    * the methods {@link #getAmountSaveBatchRecords()}.
    */
-  public static final int DEFAULT_AMOUNT_SAVE_BATCH_RECORDS = 20;
+  public static final int DEFAULT_AMOUNT_SAVE_BATCH_RECORDS = 50;
 
   /**
    * Main constructor. It collects the Key of the entity, the entity type and
@@ -127,12 +125,11 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * @param bean
    *          desired entity.
    * @param flush
-   *          If <code>true</code> the method {@link EntityManager#flush()} will
-   *          be called.
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
    * @return entity stored
    */
   @Override
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public Bean save(Bean bean, boolean flush) {
     if (bean.getId() == null) {
       getLogger().debug("Adding object: " + bean);
@@ -141,9 +138,8 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
       getLogger().debug("Updating object: " + bean);
       bean = getEntityManager().merge(bean);
     }
-    if (flush) {
-      getEntityManager().flush();
-    }
+
+    flushEntityManager(flush);
     return bean;
   }
 
@@ -154,23 +150,9 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * @since 1.3
    * @param beans
    *          desired entities.
-   * @return entities stored.
-   */
-  @Override
-  public <E extends Collection<Bean>> E save(E beans) {
-    return save(beans, false);
-  }
-
-  /**
-   * Saves a list of the desired entities. It means it will persist a new entity
-   * or merge an existent entity.
-   * 
-   * @since 1.3
-   * @param beans
-   *          desired entities.
    * @param flush
-   *          If <code>true</code> the method {@link EntityManager#flush()} will
-   *          be called.
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
    * @return entities stored.
    */
   @Override
@@ -183,8 +165,7 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
         save(bean);
         savedBeans++;
         if (savedBeans % getAmountSaveBatchRecords() == 0) {
-          this.getEntityManager().flush();
-          this.getEntityManager().clear();
+          flushEntityManager(true);
         }
       }
     }
@@ -193,8 +174,9 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
 
   /**
    * Return the amount of records to be used on a batch save. <br/>
-   * It is default used on these methods {@link #save(List)} and
-   * {@link #save(List, boolean)}.
+   * It is default used on these methods {@link #save(List)},
+   * {@link #save(List, boolean)}, {@link #removeById(Collection)} and
+   * {@link #removeById(Collection, boolean)}.
    * 
    * @return Amount of records to be used on the batch record.
    */
@@ -208,30 +190,84 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * @since 1.0
    * @param bean
    *          Desired entity.
-   */
-  @Override
-  public void remove(Bean bean) {
-    remove(bean, false);
-  }
-
-  /**
-   * Removes a desired entity.
-   * 
-   * @since 1.0
-   * @param bean
-   *          Desired entity.
    * @param flush
-   *          If <code>true</code> the method {@link EntityManager#flush()} will
-   *          be called.
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
    */
   @Override
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void remove(Bean bean, boolean flush) {
     getLogger().debug("Removing object: " + bean);
     bean = findByKey(bean.getId());
     getEntityManager().remove(bean);
+    flushEntityManager(flush);
+  }
+
+  /**
+   * Remove an entity by it's Id.
+   * 
+   * @since 1.3
+   * @param key
+   *          The Key of the entity that want to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   */
+  @Override
+  public void removeById(Key key, boolean flush) {
+    // TODO Need to implements this on future using the JPA 2.1
+    // http://en.wikibooks.org/wiki/Java_Persistence/Criteria#CriteriaDelete_.28JPA_2.1.29
+    // cb.createCriteriaDelete();
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("DELETE FROM ").append(getEntityName());
+    sb.append(" a WHERE a.id = :id");
+
+    Query query = getEntityManager().createQuery(sb.toString());
+    query.setParameter("id", key);
+
+    query.executeUpdate();
+
+    flushEntityManager(flush);
+  }
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public void removeById(Collection<Key> keys, boolean flush) {
+    if (keys != null) {
+      int removedBeans = 0;
+      Iterator<Key> iterator = keys.iterator();
+      while (iterator.hasNext()) {
+        Key key = iterator.next();
+        removeById(key, false);
+        removedBeans++;
+        if (removedBeans % getAmountSaveBatchRecords() == 0) {
+          flushEntityManager(true);
+        }
+      }
+    }
+  }
+
+  /**
+   * If received true as a parameter, it will get the current entity manager and
+   * flush it and perform the clear of the session.
+   * 
+   * @param flush
+   *          If true, it means that the session will be flushed and clean.
+   */
+  protected void flushEntityManager(boolean flush) {
     if (flush) {
-      getEntityManager().flush();
+      this.getEntityManager().flush();
+      this.getEntityManager().clear();
     }
   }
 

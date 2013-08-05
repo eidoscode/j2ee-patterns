@@ -210,6 +210,7 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
    * @return entities stored.
    */
   @Override
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public <E extends Collection<Bean>> E save(E beans, boolean flush) {
     return getDAO().save(beans, flush);
   }
@@ -222,7 +223,6 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
    *          Desired entity.
    */
   @Override
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void remove(Bean bean) {
     this.remove(bean, false);
   }
@@ -271,6 +271,7 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
    *          be called.
    */
   @Override
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public boolean removeById(Key key, boolean flush) {
     boolean returnValue = false;
     Bean entity = findByKey(key);
@@ -280,4 +281,37 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
     }
     return returnValue;
   }
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public void removeById(Collection<Key> keys) {
+    removeById(keys, false);
+  }
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public void removeById(Collection<Key> keys, boolean flush) {
+    this.getDAO().removeById(keys, flush);
+  }
+
 }

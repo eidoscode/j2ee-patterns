@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.eidoscode.patterns</groupId>
 	<artifactId>j2ee-patterns</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3</version>
 	<name>J2EE Patterns generic implementation</name>
 	<inceptionYear>2013</inceptionYear>
 	
