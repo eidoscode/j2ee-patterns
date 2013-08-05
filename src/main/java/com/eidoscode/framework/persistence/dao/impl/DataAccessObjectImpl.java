@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -132,7 +130,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * @return entity stored
    */
   @Override
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public Bean save(Bean bean, boolean flush) {
     if (bean.getId() == null) {
       getLogger().debug("Adding object: " + bean);
@@ -225,7 +222,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    *          be called.
    */
   @Override
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void remove(Bean bean, boolean flush) {
     getLogger().debug("Removing object: " + bean);
     bean = findByKey(bean.getId());
