@@ -49,16 +49,17 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    */
   Bean save(Bean bean, boolean flush);
 
-  /**
-   * Saves a list of the desired entities. It means it will persist a new entity
-   * or merge an existent entity.
-   * 
-   * @since 1.3
-   * @param beans
-   *          desired entities.
-   * @return entities stored.
-   */
-  public <E extends Collection<Bean>> E save(E beans);
+  // /**
+  // * Saves a list of the desired entities. It means it will persist a new
+  // entity
+  // * or merge an existent entity.
+  // *
+  // * @since 1.3
+  // * @param beans
+  // * desired entities.
+  // * @return entities stored.
+  // */
+  // public <E extends Collection<Bean>> E save(E beans);
 
   /**
    * Saves a list of the desired entities. It means it will persist a new entity
@@ -74,14 +75,14 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    */
   public <E extends Collection<Bean>> E save(E beans, boolean flush);
 
-  /**
-   * Removes a desired entity.
-   * 
-   * @since 1.0
-   * @param bean
-   *          Desired entity.
-   */
-  void remove(Bean bean);
+  // /**
+  // * Removes a desired entity.
+  // *
+  // * @since 1.0
+  // * @param bean
+  // * Desired entity.
+  // */
+  // void remove(Bean bean);
 
   /**
    * Removes a desired entity.
@@ -94,6 +95,53 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    *          be called.
    */
   void remove(Bean bean, boolean flush);
+
+  // /**
+  // * Remove an entity by it's Id.
+  // *
+  // * @since 1.3
+  // * @param key
+  // * The Key of the entity that want to be removed.
+  // */
+  // public void removeById(Key key);
+
+  /**
+   * Remove an entity by it's Id.
+   * 
+   * @since 1.3
+   * @param key
+   *          The Key of the entity that want to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   */
+  public void removeById(Key key, boolean flush);
+
+  // /**
+  // * Removes all entities by an ID.
+  // *
+  // * @since 1.3
+  // * @param keys
+  // * Desired keys to be removed.
+  // * @param flush
+  // * If <code>true</code> the method
+  // * {@link #flushEntityManager(boolean)} will be called.
+  // * @return entities stored.
+  // */
+  // public void removeById(Collection<Key> keys);
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  public void removeById(Collection<Key> keys, boolean flush);
 
   /**
    * Brings all the entities.

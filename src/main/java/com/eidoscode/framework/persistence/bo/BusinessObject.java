@@ -119,6 +119,32 @@ public interface BusinessObject<Key extends Serializable, Bean extends Model<Key
   boolean removeById(Key key, boolean flush);
 
   /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  public void removeById(Collection<Key> keys);
+
+  /**
+   * Removes all entities by an ID.
+   * 
+   * @since 1.3
+   * @param keys
+   *          Desired keys to be removed.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  public void removeById(Collection<Key> keys, boolean flush);
+
+  /**
    * Brings all the entities.
    * 
    * @since 1.0
