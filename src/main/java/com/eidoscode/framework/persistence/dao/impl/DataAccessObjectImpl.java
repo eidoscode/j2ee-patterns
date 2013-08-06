@@ -110,20 +110,6 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
    * @since 1.0
    * @param bean
    *          desired entity.
-   * @return entity stored
-   */
-  @Override
-  public Bean save(Bean bean) {
-    return save(bean, false);
-  }
-
-  /**
-   * Saves the desired entity. It means it will persist a new entity or merge an
-   * existent entity.
-   * 
-   * @since 1.0
-   * @param bean
-   *          desired entity.
    * @param flush
    *          If <code>true</code> the method
    *          {@link #flushEntityManager(boolean)} will be called.
@@ -162,9 +148,9 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
       Iterator<Bean> iterator = beans.iterator();
       while (iterator.hasNext()) {
         Bean bean = iterator.next();
-        save(bean);
+        save(bean, false);
         savedBeans++;
-        if (savedBeans % getAmountSaveBatchRecords() == 0) {
+        if (flush && savedBeans % getAmountSaveBatchRecords() == 0) {
           flushEntityManager(true);
         }
       }
@@ -250,7 +236,7 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
         Key key = iterator.next();
         removeById(key, false);
         removedBeans++;
-        if (removedBeans % getAmountSaveBatchRecords() == 0) {
+        if (flush && removedBeans % getAmountSaveBatchRecords() == 0) {
           flushEntityManager(true);
         }
       }
