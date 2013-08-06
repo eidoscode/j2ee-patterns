@@ -13,7 +13,7 @@ import com.eidoscode.framework.persistence.model.Model;
  * definition of what a DAO to a specific Bean should have.
  * 
  * @author eantonini
- * @version 1.3
+ * @version 1.3.1
  * @since 1.0
  * @param <Key>
  *          Key of the Bean. It must implements the {@link Serializable}
@@ -31,35 +31,12 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    * @since 1.0
    * @param bean
    *          desired entity.
-   * @return entity stored
-   */
-  Bean save(Bean bean);
-
-  /**
-   * Saves the desired entity. It means it will persist a new entity or merge an
-   * existent entity.
-   * 
-   * @since 1.0
-   * @param bean
-   *          desired entity.
    * @param flush
    *          If <code>true</code> the method {@link EntityManager#flush()} will
    *          be called.
    * @return entity stored
    */
   Bean save(Bean bean, boolean flush);
-
-  // /**
-  // * Saves a list of the desired entities. It means it will persist a new
-  // entity
-  // * or merge an existent entity.
-  // *
-  // * @since 1.3
-  // * @param beans
-  // * desired entities.
-  // * @return entities stored.
-  // */
-  // public <E extends Collection<Bean>> E save(E beans);
 
   /**
    * Saves a list of the desired entities. It means it will persist a new entity
@@ -75,15 +52,6 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    */
   public <E extends Collection<Bean>> E save(E beans, boolean flush);
 
-  // /**
-  // * Removes a desired entity.
-  // *
-  // * @since 1.0
-  // * @param bean
-  // * Desired entity.
-  // */
-  // void remove(Bean bean);
-
   /**
    * Removes a desired entity.
    * 
@@ -96,15 +64,6 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    */
   void remove(Bean bean, boolean flush);
 
-  // /**
-  // * Remove an entity by it's Id.
-  // *
-  // * @since 1.3
-  // * @param key
-  // * The Key of the entity that want to be removed.
-  // */
-  // public void removeById(Key key);
-
   /**
    * Remove an entity by it's Id.
    * 
@@ -116,19 +75,6 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
    *          {@link #flushEntityManager(boolean)} will be called.
    */
   public void removeById(Key key, boolean flush);
-
-  // /**
-  // * Removes all entities by an ID.
-  // *
-  // * @since 1.3
-  // * @param keys
-  // * Desired keys to be removed.
-  // * @param flush
-  // * If <code>true</code> the method
-  // * {@link #flushEntityManager(boolean)} will be called.
-  // * @return entities stored.
-  // */
-  // public void removeById(Collection<Key> keys);
 
   /**
    * Removes all entities by an ID.
