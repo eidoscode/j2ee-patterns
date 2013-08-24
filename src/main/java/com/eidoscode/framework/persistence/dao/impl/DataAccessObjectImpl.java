@@ -159,6 +159,54 @@ public abstract class DataAccessObjectImpl<Key extends Serializable, Bean extend
   }
 
   /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param bean
+   *          desired entity.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entity stored
+   */
+  @Override
+  public Bean merge(Bean bean, boolean flush) {
+    getLogger().debug("Updating object: " + bean);
+    bean = getEntityManager().merge(bean);
+
+    flushEntityManager(flush);
+    return bean;
+  }
+
+  /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param beans
+   *          desired entities.
+   * @param flush
+   *          If <code>true</code> the method
+   *          {@link #flushEntityManager(boolean)} will be called.
+   * @return entities stored.
+   */
+  @Override
+  public <E extends Collection<Bean>> E merge(E beans, boolean flush) {
+    if (beans != null) {
+      int mergedBeans = 0;
+      Iterator<Bean> iterator = beans.iterator();
+      while (iterator.hasNext()) {
+        Bean bean = iterator.next();
+        merge(bean, false);
+        mergedBeans++;
+        if (flush && mergedBeans % getAmountSaveBatchRecords() == 0) {
+          flushEntityManager(true);
+        }
+      }
+    }
+    return beans;
+  }
+
+  /**
    * Return the amount of records to be used on a batch save. <br/>
    * It is default used on these methods {@link #save(List)},
    * {@link #save(List, boolean)}, {@link #removeById(Collection)} and

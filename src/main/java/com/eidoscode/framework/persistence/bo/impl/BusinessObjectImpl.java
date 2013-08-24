@@ -216,6 +216,74 @@ public abstract class BusinessObjectImpl<Key extends Serializable, Bean extends 
   }
 
   /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param bean
+   *          desired entity.
+   * @return entity stored
+   */
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public Bean merge(Bean bean) {
+    return merge(bean, false);
+  }
+
+  /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param bean
+   *          desired entity.
+   * @param flush
+   *          If <code>true</code> the method {@link EntityManager#flush()} will
+   *          be called.
+   * @return entity stored
+   */
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public Bean merge(Bean bean, boolean flush) {
+    if (bean == null) {
+      throw new NullPointerException("The bean parameter is mandatory.");
+    }
+    beforeSave(bean);
+    bean = getDAO().merge(bean, flush);
+    afterSave(bean);
+    return bean;
+  }
+
+  /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * 
+   * @since 1.5
+   * @param beans
+   *          desired entities.
+   * @return entities stored.
+   */
+  public <E extends Collection<Bean>> E merge(E beans) {
+    if (beans == null) {
+      throw new NullPointerException("The bean parameter is mandatory.");
+    }
+    return merge(beans, false);
+  }
+
+  /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param beans
+   *          desired entities.
+   * @param flush
+   *          If <code>true</code> the method {@link EntityManager#flush()} will
+   *          be called.
+   * @return entities stored.
+   */
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public <E extends Collection<Bean>> E merge(E beans, boolean flush) {
+    return getDAO().merge(beans, flush);
+  }
+
+  /**
    * Removes a desired entity.
    * 
    * @since 1.0

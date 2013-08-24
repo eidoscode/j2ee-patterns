@@ -53,6 +53,32 @@ public interface DataAccessObject<Key extends Serializable, Bean extends Model<K
   public <E extends Collection<Bean>> E save(E beans, boolean flush);
 
   /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param bean
+   *          desired entity.
+   * @param flush
+   *          If <code>true</code> the method {@link EntityManager#flush()} will
+   *          be called.
+   * @return entity stored
+   */
+  Bean merge(Bean bean, boolean flush);
+
+  /**
+   * Merges the desired entity. It will merge an existent entity.
+   * 
+   * @since 1.5
+   * @param beans
+   *          desired entities.
+   * @param flush
+   *          If <code>true</code> the method {@link EntityManager#flush()} will
+   *          be called.
+   * @return entities stored.
+   */
+  public <E extends Collection<Bean>> E merge(E beans, boolean flush);
+
+  /**
    * Removes a desired entity.
    * 
    * @since 1.0
